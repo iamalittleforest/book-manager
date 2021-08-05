@@ -1,10 +1,13 @@
+// import model, datatypes, and db connection
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 
+// create sequelize model for books
 class Book extends Model { }
 
 Book.init(
   {
+    // define model attributes
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -25,6 +28,7 @@ Book.init(
     }
   },
   {
+    // set model options
     sequelize,
     freezeTableName: true,
     timestamps: false,
