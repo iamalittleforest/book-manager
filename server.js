@@ -5,7 +5,7 @@ const Book = require('./models/Book');
 const connection = async () => {
   try {
     await sequelize.sync({ force: false });
-    console.log(`Loaded x books into the library.`);
+    console.log(`\nLoaded x books into the library.`);
     start();
   } catch (err) {
     console.log(err);
@@ -16,44 +16,45 @@ const start = () => {
   inquirer
     .prompt({
       name: 'action',
-      type: 'rawlist',
-      message: '==== Book Manager ====',
+      message: '\n==== Book Manager ====\n',
+      type: 'list',
       choices: [
-        'View all books',
-        'Add a book',
-        'Edit a book',
-        'Search for a book',
-        'Save and exit'
-      ]
+        '1. View all books',
+        '2. Add a book',
+        '3. Edit a book',
+        '4. Search for a book',
+        '5. Save and exit'
+      ],
+      prefix: '',
+      suffix: '\nChoose [1-5]:'
     })
     .then((res) => {
       switch (res.action) {
-        case 'View all books':
-          console.log('==== View Books ====');
+        case '1. View all books':
+          console.log('\n==== View Books ====\n');
           viewBooks();
           break;
-        case 'Add a book':
-          console.log('==== Add a Book ====');
+        case '2. Add a book':
+          console.log('\n==== Add a Book ====\n');
           addBook();
           break;
-        case 'Edit a book':
-          console.log('==== Edit a Book ====');
+        case '3. Edit a book':
+          console.log('\n==== Edit a Book ====\n');
           editBook();
           break;
-        case 'Search for a book':
-          console.log('==== Search for a Book ====');
+        case '4. Search for a book':
+          console.log('\n==== Search for a Book ====\n');
           searchBook();
           break;
-        case 'Save and exit':
-          console.log(`Library saved.`)
-          connection.end();
-          break;
+        case '5. Save and exit':
+          console.log(`\nLibrary saved.\n`)
+          process.exit();
       }
     });
 };
 
 const viewBooks = async () => {
-  console.log('To view details, enter the book ID. To return, press <Enter>');
+  console.log('To view details, enter the book ID. To return, press <Enter>\n');
   inquirer
     .prompt([
       {
@@ -70,39 +71,43 @@ const viewBooks = async () => {
 };
 
 const addBook = async () => {
-  console.log('Please enter the following information:');
+  console.log('Please enter the following information:\n');
   inquirer
     .prompt([
       {
         name: 'title',
         type: 'input',
-        message: 'Title: '
+        message: 'Title: ',
+        prefix: ''
       },
       {
         name: 'author',
         type: 'input',
-        message: 'Author: '
+        message: 'Author: ',
+        prefix: ''
       },
       {
         name: 'description',
         type: 'input',
-        message: 'Description: '
+        message: 'Description: ',
+        prefix: ''
       }
     ])
     .then((res) => {
-      start();
+
     });
 };
 
 const editBook = async () => {
-  console.log('To edit a book, enter the book ID. To return, press <Enter>');
+  console.log('To edit a book, enter the book ID. To return, press <Enter>\n');
   inquirer
     .prompt([
       {
         name: 'id',
         type: 'list',
         message: 'Book ID: ',
-        choices: await bookChoices()
+        choices: await bookChoices(),
+        prefix: ''
       }
     ])
     .then((res) => {
@@ -112,13 +117,14 @@ const editBook = async () => {
 };
 
 const searchBook = async () => {
-  console.log('Type in one or more keywords to search for.');
+  console.log('Type in one or more keywords to search for.\n');
   inquirer
     .prompt([
       {
         name: 'id',
         type: 'input',
         message: 'Search: ',
+        prefix: ''
       }
     ])
     .then((res) => {
