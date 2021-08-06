@@ -107,7 +107,18 @@ const editBook = async () => {
 };
 
 const searchBook = async () => {
-
+  console.log('==== Search for a Book ====');
+  inquirer
+    .prompt([
+      {
+        name: 'id',
+        type: 'input',
+        message: 'Type in one or more keywords to search for.',
+      }
+    ])
+    .then((res) => {
+      
+    });
 };
 
 const bookChoices = async () => {
