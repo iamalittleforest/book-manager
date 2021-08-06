@@ -29,15 +29,19 @@ const start = () => {
     .then((res) => {
       switch (res.action) {
         case 'View all books':
+          console.log('==== View Books ====');
           viewBooks();
           break;
         case 'Add a book':
+          console.log('==== Add a Book ====');
           addBook();
           break;
         case 'Edit a book':
+          console.log('==== Edit a Book ====');
           editBook();
           break;
         case 'Search for a book':
+          console.log('==== Search for a Book ====');
           searchBook();
           break;
         case 'Save and exit':
@@ -49,75 +53,76 @@ const start = () => {
 };
 
 const viewBooks = async () => {
-  console.log('==== View Books ====');
+  console.log('To view details, enter the book ID. To return, press <Enter>');
   inquirer
     .prompt([
       {
         name: 'id',
         type: 'list',
-        message: 'To view details, enter the book ID. To return, press <Enter>',
+        message: 'Book Id: ',
         choices: await bookChoices()
       }
     ])
     .then((res) => {
       viewBooks();
+      start();
     });
 };
 
 const addBook = async () => {
-  console.log('==== Add a Book ====');
   console.log('Please enter the following information:');
   inquirer
     .prompt([
       {
         name: 'title',
         type: 'input',
-        message: 'Title:'
+        message: 'Title: '
       },
       {
         name: 'author',
         type: 'input',
-        message: 'Author:'
+        message: 'Author: '
       },
       {
         name: 'description',
         type: 'input',
-        message: 'Description:'
+        message: 'Description: '
       }
     ])
     .then((res) => {
-
+      start();
     });
 };
 
 const editBook = async () => {
-  console.log('==== Edit a Book ====');
+  console.log('To edit a book, enter the book ID. To return, press <Enter>');
   inquirer
     .prompt([
       {
         name: 'id',
         type: 'list',
-        message: 'To edit a book, enter the book ID. To return, press <Enter>',
+        message: 'Book ID: ',
         choices: await bookChoices()
       }
     ])
     .then((res) => {
       editBook();
+      start();
     });
 };
 
 const searchBook = async () => {
-  console.log('==== Search for a Book ====');
+  console.log('Type in one or more keywords to search for.');
   inquirer
     .prompt([
       {
         name: 'id',
         type: 'input',
-        message: 'Type in one or more keywords to search for.',
+        message: 'Search: ',
       }
     ])
     .then((res) => {
-      
+      start();
     });
 };
 
