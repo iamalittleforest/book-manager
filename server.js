@@ -49,7 +49,19 @@ const start = () => {
 };
 
 const viewBooks = async () => {
-
+  console.log('==== View Books ====');
+  inquirer
+    .prompt([
+      {
+        name: 'id',
+        type: 'list',
+        message: 'To view details, enter the book ID. To return, press <Enter>',
+        choices: await bookChoices()
+      }
+    ])
+    .then((res) => {
+      viewBooks();
+    });
 };
 
 const addBook = async () => {
