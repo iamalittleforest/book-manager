@@ -91,7 +91,19 @@ const addBook = async () => {
 };
 
 const editBook = async () => {
-
+  console.log('==== Edit a Book ====');
+  inquirer
+    .prompt([
+      {
+        name: 'id',
+        type: 'list',
+        message: 'To edit a book, enter the book ID. To return, press <Enter>',
+        choices: await bookChoices()
+      }
+    ])
+    .then((res) => {
+      editBook();
+    });
 };
 
 const searchBook = async () => {
