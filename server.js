@@ -1,10 +1,11 @@
 const inquirer = require('inquirer');
-const sequelize = require('../config/connection');
+const sequelize = require('./config/connection');
+const Book = require('./models/Book');
 
 const connection = async () => {
   try {
     await sequelize.sync({ force: false });
-    console.log(`Loaded x books into the library`);
+    console.log(`Loaded x books into the library.`);
     start();
   } catch (err) {
     console.log(err);
@@ -16,7 +17,7 @@ const start = () => {
     .prompt({
       name: 'action',
       type: 'rawlist',
-      message: "=== Book Manager ===",
+      message: '==== Book Manager ====',
       choices: [
         'View all books',
         'Add a book',
@@ -25,8 +26,8 @@ const start = () => {
         'Save and exit'
       ]
     })
-    .then((answer) => {
-      switch (answer.action) {
+    .then((res) => {
+      switch (res.action) {
         case 'View all books':
           viewBooks();
           break;
@@ -40,18 +41,41 @@ const start = () => {
           searchBook();
           break;
         case 'Save and exit':
+          console.log(`Library saved.`)
           connection.end();
           break;
       }
     });
 };
 
-const viewBooks = () => {
+const viewBooks = async () => {
 
 };
 
 const addBook = async () => {
+  console.log('==== Add a Book ====');
+  console.log('Please enter the following information:');
+  inquirer
+    .prompt([
+      {
+        name: 'title',
+        type: 'input',
+        message: 'Title:'
+      },
+      {
+        name: 'author',
+        type: 'input',
+        message: 'Author:'
+      },
+      {
+        name: 'description',
+        type: 'input',
+        message: 'Description:'
+      }
+    ])
+    .then((res) => {
 
+    });
 };
 
 const editBook = async () => {
@@ -61,5 +85,9 @@ const editBook = async () => {
 const searchBook = async () => {
 
 };
+
+const bookChoices = async () => {
+
+}
 
 connection();
