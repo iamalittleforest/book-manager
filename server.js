@@ -94,7 +94,11 @@ const addBook = async () => {
       }
     ])
     .then((res) => {
-
+      Book.create(res)
+        .then(newBook => {
+          console.log(`\nBook [${newBook.id}] Saved\n`);
+          start();
+        })
     });
 };
 
