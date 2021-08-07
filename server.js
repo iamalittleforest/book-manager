@@ -5,8 +5,11 @@ const Book = require('./models/Book');
 const connection = async () => {
   try {
     await sequelize.sync({ force: false });
-    console.log(`\nLoaded x books into the library.`);
-    start();
+    Book.findAll()
+      .then(allBooks => {
+        console.log(`\nLoaded ${allBooks.length} books into the library.`);
+        start();
+      })
   } catch (err) {
     console.log(err);
   }
@@ -46,22 +49,24 @@ const start = () => {
           console.log('\n==== Search for a Book ====\n');
           searchBook();
           break;
-        case '5. Save and exit':
-          console.log(`\nLibrary saved.\n`)
+        case '5. Save and exit\n':
+          console.log(`Library saved.\n`)
           process.exit();
       }
     });
 };
 
+// 1. View all books
 const viewBooks = async () => {
   console.log('To view details, enter the book ID. To return, press <Enter>\n');
   inquirer
     .prompt([
       {
         name: 'id',
-        type: 'list',
-        message: 'Book Id: ',
-        choices: await bookChoices()
+        type: 'input',
+        message: '\nTo view details, enter the book ID. To return, press <Enter>',
+        prefix: '',
+        suffix: '\nBook ID:'
       }
     ])
     .then((res) => {
@@ -93,51 +98,52 @@ const addBook = async () => {
         prefix: ''
       }
     ])
-    .then((res) => {
-      Book.create(res)
-        .then(newBook => {
-          console.log(`\nBook [${newBook.id}] Saved\n`);
-          start();
-        })
-    });
-};
-
-const editBook = async () => {
-  console.log('To edit a book, enter the book ID. To return, press <Enter>\n');
-  inquirer
-    .prompt([
-      {
-        name: 'id',
-        type: 'list',
-        message: 'Book ID: ',
-        choices: await bookChoices(),
-        prefix: ''
+    .then(res => {
+      try {
+        Book.create(res)
+          .then(newBook => {
+            console.log(`\nBook [${newBook.id}] Saved`);
+            start();
+          })
+      } catch (err) {
+        console.log(err);
       }
-    ])
-    .then((res) => {
-      editBook();
-      start();
     });
 };
 
-const searchBook = async () => {
-  console.log('Type in one or more keywords to search for.\n');
+// 3. Edit a Book
+const editBook = async () => {
   inquirer
     .prompt([
       {
         name: 'id',
         type: 'input',
-        message: 'Search: ',
-        prefix: ''
+        message: '\nTo edit a book, enter the book ID. To return, press <Enter>',
+        prefix: '',
+        suffix: '\nBook ID:'
       }
     ])
-    .then((res) => {
+    .then(res => {
+      editBook();
       start();
     });
 };
 
-const bookChoices = async () => {
-
-}
+// 4. Search for a Book
+const searchBook = async () => {
+  inquirer
+    .prompt([
+      {
+        name: 'id',
+        type: 'input',
+        message: '\nType in one or more keywords to search for.',
+        prefix: '',
+        suffix: '\nSearch: '
+      }
+    ])
+    .then(res => {
+      start();
+    });
+};
 
 connection();
