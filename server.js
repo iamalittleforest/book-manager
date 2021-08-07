@@ -87,6 +87,23 @@ const viewOneBook = async () => {
     });
 };
 
+const viewDetails = async (res) => {
+  try {
+    Book.findByPk(res.id)
+      .then(book => {
+        console.log(`
+        ID: ${book.id} 
+        Title: ${book.title} 
+        Author: ${book.author} 
+        Description: ${book.title}`);
+        viewOneBook();
+      });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+// 2. Add a Book
 const addBook = async () => {
   console.log('Please enter the following information:\n');
   inquirer
@@ -157,7 +174,5 @@ const searchBook = async () => {
       start();
     });
 };
-
-
 
 connection();
