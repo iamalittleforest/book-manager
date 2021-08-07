@@ -78,12 +78,18 @@ const viewOneBook = async () => {
         name: 'id',
         type: 'input',
         message: '\nTo view details, enter the book ID. To return, press <Enter>',
+        default: '',
         prefix: '',
         suffix: '\nBook ID:'
       }
     ])
     .then(res => {
-      viewDetails(res);
+      if (res.id === '') {
+        start();
+        return;
+      } else {
+        viewDetails(res);
+      }
     });
 };
 
@@ -95,7 +101,7 @@ const viewDetails = async (res) => {
         ID: ${book.id} 
         Title: ${book.title} 
         Author: ${book.author} 
-        Description: ${book.title}`);
+        Description: ${book.description}`);
         viewOneBook();
       });
   } catch (err) {
