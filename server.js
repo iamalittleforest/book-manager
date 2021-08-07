@@ -1,7 +1,9 @@
+// import modules
 const inquirer = require('inquirer');
 const sequelize = require('./config/connection');
 const Book = require('./models/Book');
 
+// create connection
 const connection = async () => {
   try {
     await sequelize.sync({ force: false });
@@ -15,6 +17,7 @@ const connection = async () => {
   }
 }
 
+// start menu prompts
 const start = () => {
   inquirer
     .prompt({
@@ -59,11 +62,17 @@ const start = () => {
 // 1. View all books
 const viewBooks = async () => {
   try {
+    
+    // get all books
     Book.findAll()
       .then(allBooks => {
+
+        // display all books
         allBooks.forEach(book => {
           console.log(` [${book.id}] ${book.title}`);
         });
+
+        // initiate prompt for one book
         viewOneBook();
       })
   } catch (err) {
@@ -84,10 +93,16 @@ const viewOneBook = async () => {
       }
     ])
     .then(res => {
+
+      // checks to see if enter is pressed (using default value)
       if (res.id === '') {
+        
+        // return to start
         start();
         return;
       } else {
+
+        // view details of book using provided response
         viewDetails(res);
       }
     });
@@ -95,13 +110,19 @@ const viewOneBook = async () => {
 
 const viewDetails = async (res) => {
   try {
+
+    // find book associated with provided id
     Book.findByPk(res.id)
       .then(book => {
+        
+        // display book details
         console.log(`
         ID: ${book.id} 
         Title: ${book.title} 
         Author: ${book.author} 
         Description: ${book.description}`);
+
+        // return to view one book
         viewOneBook();
       });
   } catch (err) {
@@ -135,9 +156,15 @@ const addBook = async () => {
     ])
     .then(res => {
       try {
+
+        // create a book using provided details
         Book.create(res)
           .then(newBook => {
+            
+            // display confirmation that book was created
             console.log(`\nBook [${newBook.id}] Saved`);
+
+            // return to start
             start();
           })
       } catch (err) {
