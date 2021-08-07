@@ -19,7 +19,6 @@
   "homepage": "https://github.com/iamalittleforest/book-manager#readme",
   "dependencies": {
     "dotenv": "^10.0.0",
-    "express": "^4.17.1",
     "inquirer": "^8.1.2",
     "mysql2": "^2.2.5",
     "sequelize": "^6.6.5"
