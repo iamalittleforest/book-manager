@@ -58,7 +58,20 @@ const start = () => {
 
 // 1. View all books
 const viewBooks = async () => {
-  console.log('To view details, enter the book ID. To return, press <Enter>\n');
+  try {
+    Book.findAll()
+      .then(allBooks => {
+        allBooks.forEach(book => {
+          console.log(` [${book.id}] ${book.title}`);
+        });
+        viewOneBook();
+      })
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+const viewOneBook = async () => {
   inquirer
     .prompt([
       {
@@ -69,9 +82,8 @@ const viewBooks = async () => {
         suffix: '\nBook ID:'
       }
     ])
-    .then((res) => {
-      viewBooks();
-      start();
+    .then(res => {
+      viewDetails(res);
     });
 };
 
@@ -145,5 +157,7 @@ const searchBook = async () => {
       start();
     });
 };
+
+
 
 connection();
