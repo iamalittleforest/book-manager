@@ -46,7 +46,7 @@ const start = () => {
           break;
         case '3. Edit a book':
           console.log('\n==== Edit a Book ====\n');
-          editBook();
+          editBooks();
           break;
         case '4. Search for a book':
           console.log('\n==== Search for a Book ====\n');
@@ -62,16 +62,13 @@ const start = () => {
 // 1. View all books
 const viewBooks = async () => {
   try {
-    
     // get all books
     Book.findAll()
       .then(allBooks => {
-
         // display all books
         allBooks.forEach(book => {
           console.log(` [${book.id}] ${book.title}`);
         });
-
         // initiate prompt for one book
         viewOneBook();
       })
@@ -86,22 +83,19 @@ const viewOneBook = async () => {
       {
         name: 'id',
         type: 'input',
-        message: '\nTo view details, enter the book ID. To return, press <Enter>',
+        message: '\nTo view details, enter the book ID. To return, press <Enter>\n',
         default: '',
         prefix: '',
         suffix: '\nBook ID:'
       }
     ])
     .then(res => {
-
       // checks to see if enter is pressed (using default value)
       if (res.id === '') {
-        
         // return to start
         start();
         return;
       } else {
-
         // view details of book using provided response
         viewDetails(res);
       }
@@ -110,18 +104,15 @@ const viewOneBook = async () => {
 
 const viewDetails = async (res) => {
   try {
-
     // find book associated with provided id
     Book.findByPk(res.id)
       .then(book => {
-        
         // display book details
         console.log(`
         ID: ${book.id} 
         Title: ${book.title} 
         Author: ${book.author} 
         Description: ${book.description}`);
-
         // return to view one book
         viewOneBook();
       });
@@ -156,14 +147,11 @@ const addBook = async () => {
     ])
     .then(res => {
       try {
-
         // create a book using provided details
         Book.create(res)
           .then(newBook => {
-            
             // display confirmation that book was created
             console.log(`\nBook [${newBook.id}] Saved`);
-
             // return to start
             start();
           })
@@ -174,22 +162,97 @@ const addBook = async () => {
 };
 
 // 3. Edit a Book
-const editBook = async () => {
+const editBooks = async () => {
+  try {
+    // get all books
+    Book.findAll()
+      .then(allBooks => {
+        // display all books
+        allBooks.forEach(book => {
+          console.log(` [${book.id}] ${book.title}`);
+        });
+        // initiate prompt to edit one book
+        editOneBook();
+      })
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+const editOneBook = async () => {
   inquirer
     .prompt([
       {
         name: 'id',
         type: 'input',
-        message: '\nTo edit a book, enter the book ID. To return, press <Enter>',
+        message: '\nTo edit a book, enter the book ID. To return, press <Enter>\n',
+        default: '',
         prefix: '',
         suffix: '\nBook ID:'
       }
     ])
     .then(res => {
-      editBook();
-      start();
+      // checks to see if enter is pressed (using default value)
+      if (res.id === '') {
+        // return to start
+        start();
+        return;
+      } else {
+        // view details of book using provided response
+        editDetails(res);
+      }
     });
 };
+
+const editDetails = async (res) => {
+  try {
+    // find book associated with provided id
+    Book.findByPk(res.id)
+      .then(book => {
+        console.log('\nPlease enter the following information:\n');
+        inquirer
+          .prompt([
+            {
+              name: 'title',
+              type: 'input',
+              message: 'Title: ',
+              default: `${book.title}`,
+              prefix: ''
+            },
+            {
+              name: 'author',
+              type: 'input',
+              message: 'Author: ',
+              default: `${book.author}`,
+              prefix: ''
+            },
+            {
+              name: 'description',
+              type: 'input',
+              message: 'Description: ',
+              default: `${book.description}`,
+              prefix: ''
+            }
+          ])
+          .then(res => {
+            try {
+              // create a book using provided details
+              Book.update(res, { where: { id: book.id } })
+                .then(() => {
+                  // display confirmation that book was updated
+                  console.log(`\nBook Updated`);
+                  // return to edit one book
+                  editOneBook();
+                })
+            } catch (err) {
+              console.log(err);
+            }
+          });
+      });
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 // 4. Search for a Book
 const searchBook = async () => {
