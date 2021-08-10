@@ -13,7 +13,7 @@ const connection = async () => {
         start();
       })
   } catch (err) {
-    console.log(err);
+    console.log('Connection Error', err);
   }
 }
 
@@ -69,11 +69,11 @@ const viewBooks = async () => {
         allBooks.forEach(book => {
           console.log(` [${book.id}] ${book.title}`);
         });
-        // initiate prompt for one book
+        // initiate prompt to view one book
         viewOneBook();
       })
   } catch (err) {
-    console.log(err);
+    console.log('Unable to view all books (viewBooks)', err);
   }
 }
 
@@ -113,11 +113,11 @@ const viewDetails = async (res) => {
         Title: ${book.title} 
         Author: ${book.author} 
         Description: ${book.description}`);
-        // return to view one book
+        // initiate prompt to view another book
         viewOneBook();
       });
   } catch (err) {
-    console.log(err);
+    console.log('Unable to find and view book details', err);
   }
 }
 
@@ -156,7 +156,7 @@ const addBook = async () => {
             start();
           })
       } catch (err) {
-        console.log(err);
+        console.log('Unable to create new book', err);
       }
     });
 };
@@ -175,7 +175,7 @@ const editBooks = async () => {
         editOneBook();
       })
   } catch (err) {
-    console.log(err);
+    console.log('Unable to view all books (editBooks)', err);
   }
 }
 
@@ -198,60 +198,56 @@ const editOneBook = async () => {
         start();
         return;
       } else {
-        // view details of book using provided response
+        // edit details of book using provided response
         editDetails(res);
       }
     });
 };
 
 const editDetails = async (res) => {
-  try {
-    // find book associated with provided id
-    Book.findByPk(res.id)
-      .then(book => {
-        console.log('\nPlease enter the following information:\n');
-        inquirer
-          .prompt([
-            {
-              name: 'title',
-              type: 'input',
-              message: 'Title: ',
-              default: `${book.title}`,
-              prefix: ''
-            },
-            {
-              name: 'author',
-              type: 'input',
-              message: 'Author: ',
-              default: `${book.author}`,
-              prefix: ''
-            },
-            {
-              name: 'description',
-              type: 'input',
-              message: 'Description: ',
-              default: `${book.description}`,
-              prefix: ''
-            }
-          ])
-          .then(res => {
-            try {
-              // create a book using provided details
-              Book.update(res, { where: { id: book.id } })
-                .then(() => {
-                  // display confirmation that book was updated
-                  console.log(`\nBook Updated`);
-                  // return to edit one book
-                  editOneBook();
-                })
-            } catch (err) {
-              console.log(err);
-            }
-          });
-      });
-  } catch (err) {
-    console.log(err);
-  }
+  // find book associated with provided id
+  Book.findByPk(res.id)
+    .then(book => {
+      console.log('\nPlease enter the following information:\n');
+      inquirer
+        .prompt([
+          {
+            name: 'title',
+            type: 'input',
+            message: 'Title: ',
+            default: `${book.title}`,
+            prefix: ''
+          },
+          {
+            name: 'author',
+            type: 'input',
+            message: 'Author: ',
+            default: `${book.author}`,
+            prefix: ''
+          },
+          {
+            name: 'description',
+            type: 'input',
+            message: 'Description: ',
+            default: `${book.description}`,
+            prefix: ''
+          }
+        ])
+        .then(res => {
+          try {
+            // update a book using provided details
+            Book.update(res, { where: { id: book.id } })
+              .then(() => {
+                // display confirmation that book was updated
+                console.log(`\nBook Updated`);
+                // initiate prompt to edit one book
+                editOneBook();
+              })
+          } catch (err) {
+            console.log('Unable to update book', err);
+          }
+        });
+    });
 }
 
 // 4. Search for a Book
