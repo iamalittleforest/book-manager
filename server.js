@@ -52,8 +52,8 @@ const start = () => {
           console.log('\n==== Search for a Book ====\n');
           searchBook();
           break;
-        case '5. Save and exit\n':
-          console.log(`Library saved.\n`)
+        case '5. Save and exit':
+          console.log('\nLibrary saved.')
           process.exit();
       }
     });
@@ -121,7 +121,7 @@ const viewDetails = async (res) => {
   }
 }
 
-// 2. Add a Book
+// 2. Add a book
 const addBook = async () => {
   console.log('Please enter the following information:\n');
   inquirer
@@ -161,7 +161,7 @@ const addBook = async () => {
     });
 };
 
-// 3. Edit a Book
+// 3. Edit a book
 const editBooks = async () => {
   try {
     // get all books
@@ -250,14 +250,14 @@ const editDetails = async (res) => {
     });
 }
 
-// 4. Search for a Book
+// 4. Search for a book
 const searchBook = async () => {
   inquirer
     .prompt([
       {
         name: 'id',
         type: 'input',
-        message: '\nType in one or more keywords to search for.',
+        message: '\nType in one or more keywords to search for.\n',
         prefix: '',
         suffix: '\nSearch: '
       }
