@@ -1,5 +1,6 @@
 // import modules
 const inquirer = require('inquirer');
+const { Op } = require("sequelize")
 const sequelize = require('./config/connection');
 const Book = require('./models/Book');
 
@@ -83,7 +84,7 @@ const viewOneBook = async () => {
       {
         name: 'id',
         type: 'input',
-        message: '\nTo view details, enter the book ID. To return, press <Enter>\n',
+        message: '\nTo view book details, enter the book ID. To return, press <Enter>\n',
         default: '',
         prefix: '',
         suffix: '\nBook ID:'
@@ -255,15 +256,44 @@ const searchBook = async () => {
   inquirer
     .prompt([
       {
-        name: 'id',
+        name: 'keyword',
         type: 'input',
-        message: '\nType in one or more keywords to search for.\n',
+        message: 'Type in one or more keywords to search for.\n',
         prefix: '',
         suffix: '\nSearch: '
       }
     ])
     .then(res => {
-      start();
+      try {
+        // get all books that match the search criteria
+        Book.findAll({
+          where: {
+            [Op.or]: [
+              { title: { [Op.substring]: `%${res.keyword}%` } },
+              { author: { [Op.substring]: `%${res.keyword}%` } },
+              { description: { [Op.substring]: `%${res.keyword}%` } }
+            ]
+          }
+        })
+          .then(searchResults => {
+            // checks for results from query
+            if (searchResults.length > 0) {
+              // display all books that match the search criteria
+              console.log('\nThe following book(s) matched your query:\n')
+              searchResults.forEach(book => {
+                console.log(` [${book.id}] ${book.title}`);
+              });
+              // initiate prompt to view one book
+              viewOneBook();
+            } else {
+              // inform user there are no results
+              console.log('\n No books found')
+              start();
+            }
+          })
+      } catch (err) {
+        console.log('Unable to perform search', err);
+      }
     });
 };
 
