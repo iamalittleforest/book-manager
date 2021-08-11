@@ -1,7 +1,9 @@
 // import modules
 const inquirer = require('inquirer');
-const { Op } = require("sequelize")
+const { Op } = require('sequelize');
 const sequelize = require('./config/connection');
+
+// import Book model
 const Book = require('./models/Book');
 
 // create connection
