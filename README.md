@@ -33,6 +33,11 @@ DB_PASSWORD=
 ```
 4. Create the database in MySQL using the schema.sql file provided in the db folder. 
 
+5. Run the following command to seed the database:
+```
+npm run seed
+```
+
 ## Usage
 Use the following command to run the application:
 ```
