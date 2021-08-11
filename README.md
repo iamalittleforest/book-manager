@@ -4,11 +4,15 @@
 ## Table of Contents
 * [Description](#description)
   * [Built With](#built-with) 
+* [Visuals](#visuals)
 * [Installation](#installation)
 * [Usage](#usage)
 * [License](#license)
 * [Contributing](#contributing)
 * [Contact](#contact)
+
+## Visuals
+<img src="assets\book-manager-demo.gif" alt="demo of application">
 
 ## Description
 Book Manager is an application that maintains a database of books. Using a command line interface (CLI), a user should be able to view all books, add a book, edit a book, and search for a book.
